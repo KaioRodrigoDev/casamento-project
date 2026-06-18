@@ -63,6 +63,15 @@ export function getStorageTarget(key: string) {
   return getStorageTargets().find((target) => target.key === key);
 }
 
+// URLs http:// (VPS por IP, sem TLS) sao servidas via proxy same-origin para
+// evitar Mixed Content em paginas HTTPS. URLs locais/https sao mantidas.
+export function toDisplayUrl(url: string) {
+  if (url.startsWith("http://")) {
+    return `/api/photo?src=${encodeURIComponent(url)}`;
+  }
+  return url;
+}
+
 export function isRemoteStorageConfigured(target: StorageTargetConfig) {
   return Boolean(
     target.host &&

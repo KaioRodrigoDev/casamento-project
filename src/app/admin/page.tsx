@@ -13,6 +13,7 @@ import {
   getStorageDiskStatus,
   getStorageTargets,
   isRemoteStorageConfigured,
+  toDisplayUrl,
 } from "@/lib/storage";
 
 function formatDate(date: Date) {
@@ -266,10 +267,10 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                     key={photo.id}
                     className="overflow-hidden rounded-2xl border border-[#e8d8cc] bg-white shadow-lg shadow-[#c4a08620]"
                   >
-                    <a href={photo.url} target="_blank" rel="noreferrer">
+                    <a href={toDisplayUrl(photo.url)} target="_blank" rel="noreferrer">
                       <div className="relative aspect-[4/3] bg-[#eee0d7]">
                         <Image
-                          src={photo.url}
+                          src={toDisplayUrl(photo.url)}
                           alt={photo.originalName}
                           fill
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -316,7 +317,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                       )}
 
                       <a
-                        href={photo.url}
+                        href={toDisplayUrl(photo.url)}
                         download={photo.originalName}
                         className="inline-flex text-sm font-semibold text-[#9f5f4d] underline-offset-2 hover:underline"
                       >
