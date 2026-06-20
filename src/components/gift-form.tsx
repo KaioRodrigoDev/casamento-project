@@ -6,6 +6,7 @@ import { generatePix, searchPeople, submitGift } from "@/app/actions";
 type PersonOption = { id: string; name: string };
 
 const STORAGE_KEY = "wedding-guest-name";
+const normalizeName = (name: string) => name.toLocaleLowerCase("pt-BR");
 
 function usePeopleSearch(query: string) {
   const [results, setResults] = useState<PersonOption[]>([]);
@@ -156,8 +157,9 @@ export function GiftForm() {
     const timeout = window.setTimeout(() => {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        setNameInput(saved);
-        setConfirmedName(saved);
+        const normalizedName = normalizeName(saved);
+        setNameInput(normalizedName);
+        setConfirmedName(normalizedName);
         setStep(2);
       }
     }, 0);
@@ -166,7 +168,7 @@ export function GiftForm() {
   }, []);
 
   function confirmName() {
-    const name = nameInput.trim().replace(/\s+/g, " ");
+    const name = normalizeName(nameInput.trim().replace(/\s+/g, " "));
     if (!name) return;
     localStorage.setItem(STORAGE_KEY, name);
     setConfirmedName(name);
@@ -235,7 +237,7 @@ export function GiftForm() {
             <input
               id="nameInput"
               value={nameInput}
-              onChange={(e) => setNameInput(e.target.value)}
+              onChange={(e) => setNameInput(normalizeName(e.target.value))}
               onKeyDown={(e) => {
                 if (e.key === "Enter") { e.preventDefault(); confirmName(); }
               }}
@@ -253,7 +255,10 @@ export function GiftForm() {
               ) : nameSearch.results.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {nameSearch.results.map((p) => (
-                    <PillButton key={p.id} onClick={() => setNameInput(p.name)}>
+                    <PillButton
+                      key={p.id}
+                      onClick={() => setNameInput(normalizeName(p.name))}
+                    >
                       {p.name}
                     </PillButton>
                   ))}
